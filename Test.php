@@ -34,6 +34,3 @@ trait Trait3
         return 3;
     }
 }
-
-$t1 = new Test();
-echo $t1->getSum();
