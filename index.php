@@ -54,11 +54,14 @@ class ValueObject{
     {
         return new ValueObject(rand(0,255), rand(0,255), rand(0,255));
     }
-    function mix(){
-        $color = new ValueObject(250, 250, 250);
-        $mixedColor = $color->mix(new ValueObject(100, 100, 100));
-        $mixedColor->getRed(); // 175
-        $mixedColor->getGreen(); // 175
-        $mixedColor->getBlue(); // 175
+     function mix(ValueObject $object): ValueObject
+     {
+        $green = ($this->getGreen() + $object->getGreen()) / 2;
+        $blue = ($this->getBlue() + $object->getBlue()) / 2;
+        $red = ($this->getRed() + $object->getRed()) /2;
+        echo $green . " ". $blue . " " . $red . " " . "\n";
+        return new ValueObject($green, $red, $blue);
     }
 }
+
+(new ValueObject(90,70,60))->mix(new ValueObject(20,80,90));
