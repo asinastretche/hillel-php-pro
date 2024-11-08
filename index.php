@@ -1,67 +1,39 @@
 <?php
-class ValueObject{
-    private int $red;
-    private int $green;
-    private int $blue;
-    public function __construct(int $red, int $green, int $blue)
-    {
-        $this->setRed($red);
-        $this->setGreen($green);
-        $this->setBlue($blue);
+
+class Test
+{
+    use Trait1, Trait2, Trait3 {
+        Trait1::test insteadof Trait2, Trait3;
+        Trait2::test as test2;
+        Trait3::test as test3;
     }
 
-    public function getRed(): int
-    {
-        return $this->red;
-    }
-    public function setRed($red):void
-    {
-        $this->validateColorValue($red);
-        $this->red = $red;
-    }
-    public function getGreen(): int
-    {
-        return $this->green;
-    }
-    public function setGreen($green):void
-    {
-        $this->validateColorValue($green);
-        $this->green = $green;
-    }
-    public function setBlue($blue): void
-    {
-        $this->validateColorValue($blue);
-        $this->blue = $blue;
-    }
-    public function getBlue(): int
-    {
-        return $this->blue;
-    }
-
-    protected function validateColorValue($value): void
-    {
-        if (!is_numeric($value) || $value < 0 || $value > 255) {
-            throw new InvalidArgumentException("Не валідний колір! Значення повинно бути в діапазоні від 0 до 255.");
-        }
-    }
-    public function equals(ValueObject $object): bool
-    {
-        return $this->getRed() === $object->getRed()
-            && $this->getGreen() === $object->getGreen()
-            && $this->getBlue() === $object->getBlue();
-    }
-    static function random(): ValueObject
-    {
-        return new ValueObject(rand(0,255), rand(0,255), rand(0,255));
-    }
-     function mix(ValueObject $object): ValueObject
-     {
-        $green = ($this->getGreen() + $object->getGreen()) / 2;
-        $blue = ($this->getBlue() + $object->getBlue()) / 2;
-        $red = ($this->getRed() + $object->getRed()) /2;
-        echo $green . " ". $blue . " " . $red . " " . "\n";
-        return new ValueObject($green, $red, $blue);
+    public function getSum() {
+        return $this->test() + $this->test2() + $this->test3();
     }
 }
 
-(new ValueObject(90,70,60))->mix(new ValueObject(20,80,90));
+trait Trait1
+{
+    public function test():int
+    {
+        return 1;
+    }
+}
+trait Trait2
+{
+    public function test():int
+    {
+        return 2;
+    }
+}
+trait Trait3
+{
+    public function test(): int
+    {
+        return 3;
+    }
+}
+
+$t1 = new Test();
+echo $t1->getSum();
