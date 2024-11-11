@@ -1,39 +1,23 @@
 <?php
+require_once 'Classes/User.php';
+require_once 'Classes/MethodNotFound.php';
 
-class Test
-{
-    use Trait1, Trait2, Trait3 {
-        Trait1::test insteadof Trait2, Trait3;
-        Trait2::test as test2;
-        Trait3::test as test3;
-    }
+use Classes\User;
+use Classes\MethodNotFound;
 
-    public function getSum() {
-        return $this->test() + $this->test2() + $this->test3();
-    }
-}
+try {
+    $user = new User('John Doe', 30);
 
-trait Trait1
-{
-    public function test():int
-    {
-        return 1;
-    }
-}
-trait Trait2
-{
-    public function test():int
-    {
-        return 2;
-    }
-}
-trait Trait3
-{
-    public function test(): int
-    {
-        return 3;
-    }
-}
+    $user->setName('Jane Doe');
+    $user->setAge(25);
+    $user->setEmail('janedoe@gmail.com');
 
-$t1 = new Test();
-echo $t1->getSum();
+    $user->setTown('Odesa');
+
+
+    $test = $user->getAll();
+    print_r($test);
+}  catch (MethodNotFound $methodNotFound)
+{
+    echo $methodNotFound->getMessage();
+}
