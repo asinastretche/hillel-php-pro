@@ -1,4 +1,6 @@
 <?php
+namespace Classes;
+
 
 interface Eating
 {
