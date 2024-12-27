@@ -10,5 +10,12 @@
      }
      require_once $path;
  });
+use Classes\builder\Contact;
 
+$contact = new Contact();
+$contact1 = $contact->phone('1234567890')
+            ->name('John Doe')
+            ->email('test@gmail.com')
+            ->address('street51')
+            ->build();
 
