@@ -1,21 +1,27 @@
 <?php
- spl_autoload_register(function ($class) {
-     $class = str_replace('\\', '/', $class);
-     $path = __DIR__ . "/index.php";
 
-     echo $path. '<br>';
+use App\Enums\Http\Status;
+use Core\Router;
+use Dotenv\Dotenv;
 
-     if (!file_exists($path)) {
-        throw new Exception("Class $class not found");
-     }
-     require_once $path;
- });
-use Classes\builder\Contact;
+define('BASE_DIR', dirname(__DIR__)); // /var/www/html
+require_once BASE_DIR . '/vendor/autoload.php';
+try {
+    Dotenv::createUnsafeImmutable(BASE_DIR)->load();
 
-$contact = new Contact();
-$contact1 = $contact->phone('1234567890')
-            ->name('John Doe')
-            ->email('test@gmail.com')
-            ->address('street51')
-            ->build();
+    require_once BASE_DIR . '/routes/api.php';
 
+    die(Router::dispatch($_SERVER['REQUEST_URI']));
+} catch (Throwable $exception) {
+    die(
+    jsonResponse(
+        $exception->getCode() === 0 ? Status::UNPROCESSABLE_ENTITY : Status::from($exception->getCode()),
+        [
+            'errors' => [
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTrace(),
+            ]
+        ]
+    )
+    );
+}
